@@ -16,7 +16,7 @@
 	    		</thead>
 	    		<tbody>
 	    				<td>scenario1</td>
-						<td>France</td>    				
+						<td><img src="/static/images/flag/france.png"></td>    				
 						<td>Firefox</td>
 						<td>2013-09-18</td>
 						<td>15s</td>
