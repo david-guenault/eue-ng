@@ -1,4 +1,4 @@
-%rebase layout title="login"
+%rebase layout globals(), title="login", css=["login"]
 <div class="container">
 <form class="form-signin">
 <h2 class="form-signin-heading">Please sign in</h2>

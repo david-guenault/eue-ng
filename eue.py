@@ -12,7 +12,8 @@ capacity = []
 def getDataStructure():
     return {
         "title" : "",
-        "page" : "login.tpl"
+        "page" : "login.tpl",
+        "nav" : True
     }
 
 @route('/static/<filename:path>')
@@ -27,9 +28,10 @@ def index():
     return template('index',page='index',data=data)
 
 @route('/login')
-def index():
-    """ login page """
+def login():
+    """ authentication page """
     data = getDataStructure()
+    data["nav"] = False
     return template('login',page='login',data=data)
 
 
