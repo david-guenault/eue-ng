@@ -5,7 +5,6 @@ import os
 import sys
 import time
 import re
-# import _mysql
 import MySQLdb
 from MySQLdb import cursors
 
