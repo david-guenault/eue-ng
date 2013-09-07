@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/python
+# -*- coding: <encoding name> -*-
 
 import os
 import sys
@@ -7,6 +8,7 @@ import re
 # import _mysql
 import MySQLdb
 from MySQLdb import cursors
+
 
 class mydb:
 
@@ -17,7 +19,7 @@ class mydb:
     user = None
     passw = None
 
-    def __init__(self,host,user,passw,db,port=3306):
+    def __init__(self, host, user, passw, db, port=3306):
         self.port = port
         self.host = host
         self.user = user
@@ -31,12 +33,14 @@ class mydb:
         connect to the mysql db
         """
         try:
-            self.cn = MySQLdb.connect(host=self.host, user=self.user, passwd = self.passw, db = self.db, port = self.port)
+            self.cn = MySQLdb.connect(
+                host=self.host, user=self.user, passwd=self.passw,
+                db=self.db, port=self.port)
             return True
         except:
-            return False       
+            return False
 
-    def querySelect(self,query):
+    def querySelect(self, query):
         """
         do the select query and return the result as an array of dictionaries
         """
@@ -50,4 +54,3 @@ class mydb:
         data = cur.fetchall()
         cur.close()
         return data
- 
