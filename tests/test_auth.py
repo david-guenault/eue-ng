@@ -2,8 +2,7 @@
 #-*- coding:utf-8 -*-
 
 import unittest
-from lib import eueauth
-from pymongo import Connection
+from lib import eueauth, euedb
 
 """
 Unit tests for auth class module
@@ -12,23 +11,18 @@ Unit tests for auth class module
 
 class TestAuth(unittest.TestCase):
 
-    db = "testAuth"
+    mongo = None
+    host = "localhost"
+    port = 27017
+    db = "eue"
     collection = "users"
 
-    mongoCn = None
-    mongoDb = None
-
     def setUp(self):
-        self.auth = eueauth.auth()
-        self.mongoCn = Connection()
-        self.mongoDb = self.mongoCn[self.db]
-        self.mongoColl = self.mongoDb[self.collection]
+        self.mongo = euedb.mongo(host=self.host, port=self.port)
+        self.mongo.connect()
 
     def tearDown(self):
-        self.mongoDb = None
-        self.mongoCn.drop_database(self.db)
-        self.mongoCn = None
-        self.auth = None
+        self.mongo.disconnect()
 
     def test001_both_login_and_password(self):
         """ test if both login and password are provided """

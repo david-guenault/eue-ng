@@ -3,7 +3,7 @@
 
 import os
 import sys
-from bottle import route, run, template, static_file, get, post
+from bottle import route, run, template, static_file, get, post, request
 from lib import eueauth
 
 
@@ -12,7 +12,11 @@ def getDataStructure():
     return {
         "title": "",
         "page": "login.tpl",
-        "nav": True
+        "nav": True,
+        "message": {
+            "type": "",
+            "content": ""
+        }
     }
 
 
@@ -35,15 +39,25 @@ def login():
     data = getDataStructure()
     data["nav"] = False
 
+    return template('login', page='login', data=data)
+
+
+@post('/do_login')
+def do_login():
+    """ process login check """
+    data = getDataStructure()
+    data["nav"] = False
+
     user = request.forms.get("user")
     password = request.forms.get("password")
 
     return template('login', page='login', data=data)
 
-
 if __name__ == '__main__':
 
     base = os.path.dirname(os.path.realpath(__file__))
+
+    auth = eueauth.auth()
 
     dom0s = []
     capacity = []
