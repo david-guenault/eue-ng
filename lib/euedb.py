@@ -5,11 +5,12 @@ import os
 import sys
 import time
 import re
-import MySQLdb
-from MySQLdb import cursors
 
 
 class mysql:
+
+    import MySQLdb
+    from MySQLdb import cursors
 
     cn = None
 
@@ -64,3 +65,41 @@ class mysql:
         data = cur.fetchall()
         cur.close()
         return data
+
+
+class mongo:
+
+    from pymongo import MongoClient
+
+    cn = None
+    db = None
+
+    host = None
+    port = None
+    user = None
+    password = None
+    database = None
+
+    def __init__(
+            self, host="localhost", port=27017,
+            database=None, user=None, password=None):
+        self.host = localhost
+        self.port = port
+        self.database = database
+        self.user = user
+        self.password = password
+
+    def connect():
+        try:
+            self.cn = pymongo.MongoClient(host=self.localhost, port=self.port)
+            self.db = cn[self.database]
+            return True
+        except:
+            return False
+
+    def disconnect():
+        try:
+            self.cn.disconnect()
+            return True
+        except:
+            return False
