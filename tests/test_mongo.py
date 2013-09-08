@@ -24,12 +24,9 @@ class TestMongo(unittest.TestCase):
         pass
 
     def test001_connect(self):
-        """ test mongodb connection """
-        self.c = euedb.mongo(host=self.host, port=self.port, db=self.db)
-        assert c.connect()
-
-    def test002_disconnect(self):
-        """ test mongodb disconnection """
+        """ test mongodb connection/disconnection """
+        self.c = euedb.mongo(host=self.host, port=self.port, database=self.db)
+        assert self.c.connect() is True
         assert self.c.disconnect()
 
 if __name__ == '__main__':
