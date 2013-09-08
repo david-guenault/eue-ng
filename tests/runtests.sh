@@ -10,8 +10,8 @@ echo "PYTHONPATH=$PYTHONPATH"
 
 cd $tests
 
-tests="test_mongo.py test_auth.py  test_user.py"
-tests="test_mongo.py"
+tests="test_mongo.py test_user.py"
+
 for test in $tests
 do
     echo "Running test $test"

@@ -2,8 +2,8 @@
 #-*- coding:utf-8 -*-
 
 import unittest
+from lib import euemongo
 from lib import eueuser
-from pymongo import Connection
 
 """
 Unit tests for user class module
@@ -12,23 +12,30 @@ Unit tests for user class module
 
 class TestUser(unittest.TestCase):
 
-    db = "eue"
+    host = "localhost"
+    port = 27017
+    database = "eue"
     collection = "users"
 
-    mongoCn = None
-    mongoDb = None
+    mongo = None
 
     def setUp(self):
-        self.user = eueuser.user()
-        self.mongoCn = Connection()
-        self.mongoDb = self.mongoCn[self.db]
-        self.mongoColl = self.mongoDb[self.collection]
+        self.mongo = euemongo.mongo(
+            host=self.host,
+            port=self.port,
+            database=self.database)
+        self.mongo.connect()
+        self.user = eueuser.user(mongo=self.mongo, collection=self.collection)
 
     def tearDown(self):
-        self.mongoDb = None
-        self.mongoCn.drop_database(self.db)
-        self.mongoCn = None
-        self.auth = None
+        """ unset user instance """
+        self.user = None
+        """ cleanup everything for next test """
+        self.mongo.db.drop_collection(self.collection)
+        """ disconnect from mongo """
+        self.mongo.disconnect()
+        """ unset mongo instance """
+        self.mongo = None
 
     """ test user creation """
     def test001_createUser(self):
@@ -51,40 +58,43 @@ class TestUser(unittest.TestCase):
                 "assert": False},
             {"email": "david.guenault@gmail.com",
                 "password": "dfgdfg",
-                "assert": True},
-            {"email": "david.guenault@gmail.com",
-                "password": "dfgdfg",
-                "assert": False}]
+                "assert": "notempty"}]
+            # {"email": "david.guenault@gmail.com",
+            #     "password": "dfgdfg",
+            #     "assert": False}
 
         for case in cases:
             if not case["assert"]:
                 assert not self.user.new(case["email"], case["password"])
-            else:
+            if case["assert"]:
                 assert self.user.new(case["email"], case["password"])
+            if case["assert"] is "gt0":
+                assert self.user.new(case["email"], case["password"]) != ""
 
-    """ test user update """
-    def test001_updateUser(self):
-        """
-            create a user
-            update the password
-            try to update with an empty password
-        """
-        assert self.user.new("david.guenault@gmail.com", "abcd")
-        assert self.user.update("david.guenault@gmail.com", "efgh")
-        assert not self.user.update("david.guenault@gmail.com", "")
+    # """ test user update """
+    # def test001_updateUser(self):
+    #     """
+    #         create a user
+    #         update the password
+    #         try to update with an empty password
+    #     """
+    #     assert self.user.new("david.guenault@gmail.com", "abcd")
+    #     assert self.user.update("david.guenault@gmail.com", "efgh")
+    #     assert not self.user.update("david.guenault@gmail.com", "")
 
-    """ test user deletion """
-    def test001_updateUser(self):
-        """
-            create a user
-            delete the user for an exisiting user
-            delete the user for an unknown user
-            delete the user with an empty email
-        """
-        assert self.user.new("david.guenault@gmail.com", "abcd")
-        assert self.user.delete("david.guenault@gmail.com")
-        assert not self.user.delete("david@gmail.com")
-        assert not self.user.delete("")
+    # """ test user deletion """
+    # def test001_updateUser(self):
+    #     """
+    #         create a user
+    #         delete the user for an exisiting user
+    #         delete the user for an unknown user
+    #         delete the user with an empty email
+    #     """
+    #     assert self.user.new("david.guenault@gmail.com", "abcd")
+    #     assert self.user.delete("david.guenault@gmail.com")
+    #     assert not self.user.delete("david@gmail.com")
+    #     assert not self.user.delete("")
 
 if __name__ == '__main__':
+    unittest.buffer = True
     unittest.main()
