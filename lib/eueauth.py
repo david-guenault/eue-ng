@@ -2,41 +2,37 @@
 # -*- coding: <encoding name> -*-
 
 import re
+from lib import eueuser, euemongo
+
+
+"""
+Class dedicated to user authentication
+"""
 
 
 class auth:
 
     def __init__(self):
+        self.user = eueuser.user(self.mongo, "users")
         return
 
-    def check_fields(self, user=None, password=None):
+    def check_fields(self, user, password):
         """
         check if fields are provided and are not empty
         """
-
-        if not user or not password:
-            return False
-
         if len(user) == 0 or len(password) == 0:
             return False
 
-        return True
+        pass
 
-    def check_mail(self, email=None):
+    def login(self, user, password):
         """
-        Verify that the provided email is valid
+        authenticate user agains mongo database
         """
+        pass
 
-        regex = r"[^@]+@[^@]+\.[^@]+"
-        if not re.match(regex, email):
-            return False
-        else:
-            return True
-
-        return True
-
-    def check_auth(self, user, password):
+    def logout(self):
         """
-        Verify authentication credentials
+        logout user
         """
-        return True
+        pass

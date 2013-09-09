@@ -56,12 +56,12 @@ class TestUser(unittest.TestCase):
             {"email": "",
                 "password": "dfgdfg",
                 "assert": False},
-            {"email": u"david.guenault@gmail.com",
-                "password": u"dfgdfg",
-                "assert": "notempty"},
             {"email": "david.guenault@gmail.com",
                 "password": "dfgdfg",
-                "assert": False}]
+                "assert": "notempty"}]
+            # {"email": "david.guenault@gmail.com",
+            #     "password": "dfgdfg",
+            #     "assert": False}]
 
         for case in cases:
             if not case["assert"]:
