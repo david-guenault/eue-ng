@@ -2,10 +2,10 @@
 #-*- coding:utf-8 -*-
 
 import unittest
-from lib import euedb
+from lib import euemongo
 
 """
-Unit tests for euedb mongo class module
+Unit tests for euemongo mongo class module
 """
 
 
@@ -25,7 +25,10 @@ class TestMongo(unittest.TestCase):
 
     def test001_connect(self):
         """ test mongodb connection/disconnection """
-        self.c = euedb.mongo(host=self.host, port=self.port, database=self.db)
+        self.c = euemongo.mongo(
+            host=self.host,
+            port=self.port,
+            database=self.db)
         assert self.c.connect() is True
         assert self.c.disconnect()
 
