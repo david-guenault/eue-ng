@@ -31,13 +31,13 @@ class mongo:
         self.password = password
 
     def connect(self):
-        # try:
-        self.cn = MongoClient(host=self.host, port=self.port)
-        if self.database:
-            self.db = self.cn[self.database]
-        return True
-        # except:
-        #     return False
+        try:
+            self.cn = MongoClient(host=self.host, port=self.port)
+            if self.database:
+                self.db = self.cn[self.database]
+            return True
+        except:
+            return False
 
     def disconnect(self):
         try:

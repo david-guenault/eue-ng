@@ -22,9 +22,9 @@ class user:
             return False
 
         """ first check if a document with the same email already exist """
-        user = self.get(user)
-        if user:
-            if user.count() > 0:
+        usr = self.get(user)
+        if usr:
+            if usr.count() > 0:
                 return False
 
         """ create new user """
@@ -49,3 +49,11 @@ class user:
             return result
         except:
             return False
+
+if __name__ == '__main__':
+    from lib import euemongo
+    m = euemongo.mongo(host="localhost", port=27017, database="eue")
+    m.connect()
+    u = user(m, "users")
+    u.new("david.guenault@gmail.com", "dfgdfg")
+    m.disconnect()

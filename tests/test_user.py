@@ -56,19 +56,19 @@ class TestUser(unittest.TestCase):
             {"email": "",
                 "password": "dfgdfg",
                 "assert": False},
+            {"email": u"david.guenault@gmail.com",
+                "password": u"dfgdfg",
+                "assert": "notempty"},
             {"email": "david.guenault@gmail.com",
                 "password": "dfgdfg",
-                "assert": "notempty"}]
-            # {"email": "david.guenault@gmail.com",
-            #     "password": "dfgdfg",
-            #     "assert": False}
+                "assert": False}]
 
         for case in cases:
             if not case["assert"]:
                 assert not self.user.new(case["email"], case["password"])
             if case["assert"]:
                 assert self.user.new(case["email"], case["password"])
-            if case["assert"] is "gt0":
+            if case["assert"] is "notempty":
                 assert self.user.new(case["email"], case["password"]) != ""
 
     # """ test user update """
@@ -96,5 +96,4 @@ class TestUser(unittest.TestCase):
     #     assert not self.user.delete("")
 
 if __name__ == '__main__':
-    unittest.buffer = True
     unittest.main()
