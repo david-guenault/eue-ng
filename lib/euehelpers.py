@@ -1,0 +1,15 @@
+"""
+helpers functions for various aspect of eue-ng project
+"""
+
+
+def check_mail(self, email):
+    """
+    Verify that the provided email is valid
+    """
+
+    regex = r"^[_.0-9A-Za-z-]+@([0-9A-Za-z][0-9A-Za-z-]+.)+[A-Za-z]{2,4}$"
+    if not re.match(regex, email):
+        return False
+    else:
+        return True
