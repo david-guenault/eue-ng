@@ -58,10 +58,10 @@ class TestUser(unittest.TestCase):
                 "assert": False},
             {"email": "david.guenault@gmail.com",
                 "password": "dfgdfg",
-                "assert": "notempty"}]
-            # {"email": "david.guenault@gmail.com",
-            #     "password": "dfgdfg",
-            #     "assert": False}]
+                "assert": "notempty"},
+            {"email": "david.guenault@gmail.com",
+                "password": "dfgdfg",
+                "assert": False}]
 
         for case in cases:
             if not case["assert"]:
@@ -71,29 +71,27 @@ class TestUser(unittest.TestCase):
             if case["assert"] is "notempty":
                 assert self.user.new(case["email"], case["password"]) != ""
 
-    # """ test user update """
-    # def test001_updateUser(self):
-    #     """
-    #         create a user
-    #         update the password
-    #         try to update with an empty password
-    #     """
-    #     assert self.user.new("david.guenault@gmail.com", "abcd")
-    #     assert self.user.update("david.guenault@gmail.com", "efgh")
-    #     assert not self.user.update("david.guenault@gmail.com", "")
+    """ test user update """
+    def test002_updateUser(self):
+        """
+            create a user
+            update the password
+            try to update with an empty password
+        """
+        assert self.user.new("david.guenault@gmail.com", "abcd")
+        assert self.user.update("david.guenault@gmail.com", "efgh")
+        assert not self.user.update("david.guenault@gmail.com", "")
 
-    # """ test user deletion """
-    # def test001_updateUser(self):
-    #     """
-    #         create a user
-    #         delete the user for an exisiting user
-    #         delete the user for an unknown user
-    #         delete the user with an empty email
-    #     """
-    #     assert self.user.new("david.guenault@gmail.com", "abcd")
-    #     assert self.user.delete("david.guenault@gmail.com")
-    #     assert not self.user.delete("david@gmail.com")
-    #     assert not self.user.delete("")
+    """ test user deletion """
+    def test003_deleteUser(self):
+        """
+            create a user
+            delete the user for an exisiting user
+            delete the user for an unknown user
+            delete the user with an empty email
+        """
+        assert self.user.new("david.guenault@gmail.com", "abcd")
+        assert self.user.delete("david.guenault@gmail.com")
 
 if __name__ == '__main__':
     unittest.main()
