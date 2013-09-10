@@ -1,9 +1,14 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import re
+
 """
 helpers functions for various aspect of eue-ng project
 """
 
 
-def check_mail(self, email):
+def check_mail(email):
     """
     Verify that the provided email is valid
     """
