@@ -1,8 +1,7 @@
 #!/usr/bin/python
-# -*- coding: <encoding name> -*-
+# -*- coding: utf-8 -*-
 
-import re
-from lib import eueuser, euemongo
+from lib import eueuser, euemongo, euehelpers
 
 
 """
@@ -12,27 +11,54 @@ Class dedicated to user authentication
 
 class auth:
 
-    def __init__(self):
-        self.user = eueuser.user(self.mongo, "users")
+    mongo = None
+    collection = None
+    user = None
+    session = None
+
+    def __init__(self, mongo, collection):
+        self.mongo = mongo
+        self.user = eueuser.user(self.mongo, self.collection)
         return
 
-    def check_fields(self, user, password):
-        """
-        check if fields are provided and are not empty
-        """
-        if len(user) == 0 or len(password) == 0:
-            return False
+    def get_Session_Structure():
+        return {
+            "user": None,
+            "password": None,
+            "start": None,
+            "end": None
+        }
 
-        pass
+    def check_fields(self, user, password):
+        if len(user) == "" or len(password) == "":
+            return False
+        else:
+            if not euehelpers.check_mail(user):
+                return False
+            else:
+                return True
 
     def login(self, user, password):
         """
         authenticate user agains mongo database
         """
-        pass
+        if not self.check_fields(user, password):
+            return False
+        else:
+            usr = self.user.get(user=user)
+            if not usr:
+                return False
+            else:
+                if password != usr["password"]:
+                    return False
+                else:
+                    self.session = self.get_Session_Structure()
+                    self.session["user"] = user
+                    self.session["password"] = password
+                    return True
 
     def logout(self):
         """
         logout user
         """
-        pass
+        self.session = None
