@@ -33,9 +33,9 @@ class TestAuth(unittest.TestCase):
         user = eueuser.user(self.mongo, "users")
         auth = eueauth.auth(self.mongo, "users")
         assert user.new("david.guenault@gmail.com", "dfgdfg")
-        assert auth.login("david.guenault@gmail.com", "dfgdfg")
-        assert auth.logout("david.guenault@gmail.com")
+        assert auth.logout()
 
 
 if __name__ == '__main__':
-    unittest.main()
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestAuth)
+    unittest.TextTestRunner(verbosity=2).run(suite)
