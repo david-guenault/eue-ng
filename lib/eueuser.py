@@ -27,8 +27,7 @@ class user:
         """ first check if a document with the same email already exist """
         usr = self.get(user)
         if usr:
-            if usr.count() > 0:
-                return False
+            return False
 
         """ create new user """
         id = self.mongo.db[self.collection].insert(
@@ -71,7 +70,10 @@ class user:
         try:
             result = self.mongo.db[self.collection].find(
                 {"email": user})
-            return result
+            if result.count() != 1:
+                return False
+            else:
+                return result[0]
         except:
             return False
 
@@ -81,4 +83,6 @@ if __name__ == '__main__':
     m.connect()
     u = user(m, "users")
     u.new("david.guenault@gmail.com", "dfgdfg")
+    for element in u.get("david.guenault@gmail.com"):
+        print element
     m.disconnect()

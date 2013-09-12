@@ -71,8 +71,18 @@ class TestUser(unittest.TestCase):
             if case["assert"] is "notempty":
                 assert self.user.new(case["email"], case["password"]) != ""
 
+    """ test get user """
+    def test002_getUser(self):
+        id = self.user.new("david.guenault@gmail.com", "abcd")
+        assert id is not False
+        result = self.user.get("david.guenault@gmail.com")
+        assert result is not False
+        assert result['_id'] == id
+        assert result['email'] == 'david.guenault@gmail.com'
+        assert result['password'] == 'abcd'
+
     """ test user update """
-    def test002_updateUser(self):
+    def test003_updateUser(self):
         """
             create a user
             update the password
@@ -83,7 +93,7 @@ class TestUser(unittest.TestCase):
         assert not self.user.update("david.guenault@gmail.com", "")
 
     """ test user deletion """
-    def test003_deleteUser(self):
+    def test004_deleteUser(self):
         """
             create a user
             delete the user for an exisiting user
