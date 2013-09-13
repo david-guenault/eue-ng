@@ -30,31 +30,49 @@ def getSessionStructure():
     }
 
 
+def isAuth():
+    """ check if session is active """
+    isAuth = False
+    s = bottle.request.environ.get('beaker.session')
+
+    print s
+
+    if "auth" in s:
+        if s["auth"]["isAuth"]:
+            isAuth = True
+
+    return isAuth
+
+
 @route('/static/<filename:path>')
 def static(filename):
     """ return static files """
     return static_file(filename, root="%s/static" % (base))
 
 
+@route('/profile')
+def profile():
+    """ profile page """
+    if not isAuth():
+        bottle.redirect("/login")
+    else:
+        data = getDataStructure()
+        return template('profile', page='profile', data=data)
+
+
 @route('/')
 def index():
-    """ check if session is active """
-    s = bottle.request.environ.get('beaker.session')
-
-    if not "auth" in s.keys():
-        bottle.redirect("/login")
-
-    if not s["auth"]["isAuth"]:
-        bottle.redirect("/login")
-
     """ index page """
-    data = getDataStructure()
-    return template('index', page='index', data=data)
+    if not isAuth():
+        bottle.redirect("/login")
+    else:
+        data = getDataStructure()
+        return template('index', page='index', data=data)
 
 
 @route('/login')
 def login():
-    """ authentication page """
+    """ login page """
     data = getDataStructure()
     data["nav"] = False
     return template('login', page='login', data=data)
@@ -65,7 +83,6 @@ def logout():
     """ logout process """
     s = bottle.request.environ.get('beaker.session')
     s['auth'] = getSessionStructure()
-
     data = getDataStructure()
     data["nav"] = False
     bottle.redirect("/login")
@@ -80,7 +97,9 @@ def do_login():
     user = request.forms.get("user")
     password = request.forms.get("password")
 
-    if len(user) > 0 or len(password) > 0:
+    print "AUTH:%s %s" % (user, password)
+
+    if len(user) > 0 and len(password) > 0:
         if auth.login(user, password):
             s = bottle.request.environ.get('beaker.session')
             s['auth'] = getSessionStructure()
@@ -88,8 +107,10 @@ def do_login():
             s['auth']['email'] = user
             bottle.redirect("/")
         else:
+            print "AUTH: Invalid user name and/or password"
             bottle.redirect("/login")
     else:
+        print "AUTH:user and password are mandatory"
         bottle.redirect("/login")
 
 
