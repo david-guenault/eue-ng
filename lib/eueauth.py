@@ -34,13 +34,16 @@ class auth:
         authenticate user agains mongo database
         """
         if not self.check_fields(user, password):
+            print "AUTH:LOGIN fields verification failed"
             return False
         else:
             usr = self.user.get(user)
             if not usr:
+                print "AUTH:LOGIN user not found"
                 return False
             else:
                 if password != usr["password"]:
+                    print "AUTH:LOGIN password does not match"
                     return False
                 else:
                     return True

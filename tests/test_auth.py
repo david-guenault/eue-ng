@@ -32,7 +32,9 @@ class TestAuth(unittest.TestCase):
         """ check login process """
         user = eueuser.user(self.mongo, "users")
         auth = eueauth.auth(self.mongo, "users")
-        assert user.new("david.guenault@gmail.com", "dfgdfg")
+        assert user.new({
+            "email": "david.guenault@gmail.com",
+            "password": "dfgdfg"})
         assert auth.login("david.guenault@gmail.com", "dfgdfg")
 
 
