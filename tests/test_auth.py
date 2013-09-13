@@ -28,12 +28,12 @@ class TestAuth(unittest.TestCase):
         self.mongo.disconnect()
         self.mongo.db[self.collection].drop()
 
-    def test001_login_logout(self):
+    def test001_login(self):
         """ check login process """
         user = eueuser.user(self.mongo, "users")
         auth = eueauth.auth(self.mongo, "users")
         assert user.new("david.guenault@gmail.com", "dfgdfg")
-        assert auth.logout()
+        assert auth.login("david.guenault@gmail.com", "dfgdfg")
 
 
 if __name__ == '__main__':
