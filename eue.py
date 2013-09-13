@@ -102,12 +102,11 @@ if __name__ == '__main__':
         'session.auto': True
     }
 
-    """
+    myapp = SessionMiddleware(bottle.app(), session_opts)
+    bottle.run(
+        app=myapp,
         host='localhost',
         port=8080,
         reloader=True,
         debug=True
-    """
-
-    myapp = SessionMiddleware(bottle.app(), session_opts)
-    run(app=myapp)
+    )
