@@ -49,31 +49,43 @@ class TestUser(unittest.TestCase):
         cases = [
             {"email": "",
                 "password": "",
+                "firstname": "",
+                "lastname": "",
                 "assert": False},
             {"email": "david.guenault@gmail.com",
                 "password": "",
+                "firstname": "",
+                "lastname": "",
                 "assert": False},
             {"email": "",
                 "password": "dfgdfg",
+                "firstname": "",
+                "lastname": "",
                 "assert": False},
             {"email": "david.guenault@gmail.com",
                 "password": "dfgdfg",
+                "firstname": "",
+                "lastname": "",
                 "assert": "notempty"},
             {"email": "david.guenault@gmail.com",
                 "password": "dfgdfg",
+                "firstname": "",
+                "lastname": "",
                 "assert": False}]
 
         for case in cases:
             if not case["assert"]:
-                assert not self.user.new(case["email"], case["password"])
+                assert not self.user.new(case)
             if case["assert"]:
-                assert self.user.new(case["email"], case["password"])
+                assert self.user.new(case)
             if case["assert"] is "notempty":
-                assert self.user.new(case["email"], case["password"]) != ""
+                assert self.user.new(case) != ""
 
     """ test get user """
     def test002_getUser(self):
-        id = self.user.new("david.guenault@gmail.com", "abcd")
+        id = self.user.new({
+            "email": "david.guenault@gmail.com",
+            "password": "abcd"})
         assert id is not False
         result = self.user.get("david.guenault@gmail.com")
         assert result is not False
@@ -84,13 +96,44 @@ class TestUser(unittest.TestCase):
     """ test user update """
     def test003_updateUser(self):
         """
-            create a user
-            update the password
-            try to update with an empty password
+            - create a user
+            - update the password / firstname / lastname
+            - verify that everything is really updated
+            - try to update with an empty email
+            - try to update with an empty password
+            - try to update with an empty password and an empty email
         """
-        assert self.user.new("david.guenault@gmail.com", "abcd")
-        assert self.user.update("david.guenault@gmail.com", "efgh")
-        assert not self.user.update("david.guenault@gmail.com", "")
+
+        assert self.user.new({
+            "email": "david.guenault@gmail.com",
+            "password": "dfgdfg",
+            "firstname": "Eric",
+            "lastname": "SORIANO"})
+        assert self.user.update({
+            "email": "david.guenault@gmail.com",
+            "password": "abcd",
+            "firstname": "David",
+            "lastname": "GUENAULT"})
+        usr = self.user.get("david.guenault@gmail.com")
+        assert usr["email"] == "david.guenault@gmail.com"
+        assert usr["password"] == "abcd"
+        assert usr["firstname"] == "David"
+        assert usr["lastname"] == "GUENAULT"
+        assert not self.user.update({
+            "email": "",
+            "password": "dfgdfg",
+            "firstname": "David",
+            "lastname": "GUENAULT"})
+        assert not self.user.update({
+            "email": "david.guenault@gmail.com",
+            "password": "",
+            "firstname": "David",
+            "lastname": "GUENAULT"})
+        assert not self.user.update({
+            "email": "",
+            "password": "",
+            "firstname": "David",
+            "lastname": "GUENAULT"})
 
     """ test user deletion """
     def test004_deleteUser(self):
@@ -100,7 +143,9 @@ class TestUser(unittest.TestCase):
             delete the user for an unknown user
             delete the user with an empty email
         """
-        assert self.user.new("david.guenault@gmail.com", "abcd")
+        assert self.user.new({
+            "email": "david.guenault@gmail.com",
+            "password": "abcd"})
         assert self.user.delete("david.guenault@gmail.com")
 
 if __name__ == '__main__':
