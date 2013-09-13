@@ -22,6 +22,14 @@ def getDataStructure():
     }
 
 
+def getSessionStructure():
+    """ return an empty session dict """
+    return {
+        "isAuth": False,
+        "email": ""
+    }
+
+
 @route('/static/<filename:path>')
 def static(filename):
     """ return static files """
@@ -31,11 +39,13 @@ def static(filename):
 @route('/')
 def index():
     """ check if session is active """
-    if auth:
-        if not auth.session["isAuth"]:
-            redirect("/login")
-    else:
-        redirect("/login")
+    s = bottle.request.environ.get('beaker.session')
+
+    if not "auth" in s.keys():
+        bottle.redirect("/login")
+
+    if not s["auth"]["isAuth"]:
+        bottle.redirect("/login")
 
     """ index page """
     data = getDataStructure()
@@ -47,19 +57,18 @@ def login():
     """ authentication page """
     data = getDataStructure()
     data["nav"] = False
-
     return template('login', page='login', data=data)
 
 
 @route('/logout')
 def logout():
     """ logout process """
+    s = bottle.request.environ.get('beaker.session')
+    s['auth'] = getSessionStructure()
+
     data = getDataStructure()
     data["nav"] = False
-
-    auth.logout()
-
-    redirect("/login")
+    bottle.redirect("/login")
 
 
 @post('/do_login')
@@ -71,10 +80,18 @@ def do_login():
     user = request.forms.get("user")
     password = request.forms.get("password")
 
-    if not auth.login(user, password):
-        return template('login', page='login', data=data)
+    if len(user) > 0 or len(password) > 0:
+        if auth.login(user, password):
+            s = bottle.request.environ.get('beaker.session')
+            s['auth'] = getSessionStructure()
+            s['auth']['isAuth'] = True
+            s['auth']['email'] = user
+            bottle.redirect("/")
+        else:
+            bottle.redirect("/login")
     else:
-        redirect("/")
+        bottle.redirect("/login")
+
 
 if __name__ == '__main__':
 
