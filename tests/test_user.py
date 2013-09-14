@@ -95,45 +95,49 @@ class TestUser(unittest.TestCase):
 
     """ test user update """
     def test003_updateUser(self):
-        """
-            - create a user
-            - update the password / firstname / lastname
-            - verify that everything is really updated
-            - try to update with an empty email
-            - try to update with an empty password
-            - try to update with an empty password and an empty email
-        """
-
+        """ create a user """
         assert self.user.new({
             "email": "david.guenault@gmail.com",
             "password": "dfgdfg",
             "firstname": "Eric",
             "lastname": "SORIANO"})
+        """ update the password / firstname / lastname """
         assert self.user.update({
             "email": "david.guenault@gmail.com",
             "password": "abcd",
             "firstname": "David",
             "lastname": "GUENAULT"})
+        """ verify that everything is really updated """
         usr = self.user.get("david.guenault@gmail.com")
         assert usr["email"] == "david.guenault@gmail.com"
         assert usr["password"] == "abcd"
         assert usr["firstname"] == "David"
         assert usr["lastname"] == "GUENAULT"
+        """ try to update with an empty email """
         assert not self.user.update({
             "email": "",
             "password": "dfgdfg",
             "firstname": "David",
             "lastname": "GUENAULT"})
+        """ try to update with an empty password """
         assert not self.user.update({
             "email": "david.guenault@gmail.com",
             "password": "",
             "firstname": "David",
             "lastname": "GUENAULT"})
+        """ try to update with an empty password and an empty email """
         assert not self.user.update({
             "email": "",
             "password": "",
             "firstname": "David",
             "lastname": "GUENAULT"})
+        """ try to update only firstname and lastname """
+        assert self.user.update({
+            "email": "david.guenault@gmail.com",
+            "firstname": "David",
+            "lastname": "GUENAULT"})
+
+        print self.user.get("david.guenault@gmail.com")
 
     """ test user deletion """
     def test004_deleteUser(self):

@@ -9,5 +9,4 @@ if __name__ == '__main__':
     m.connect()
     u = eueuser.user(m, "users")
     print u.delete("david.guenault@gmail.com")
-    print u.new({"email": "david.guenault@gmail.com", "password": "dfgdfg"})
     print m.disconnect()

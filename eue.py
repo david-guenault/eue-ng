@@ -6,7 +6,7 @@ import sys
 from beaker.middleware import SessionMiddleware
 import bottle
 from bottle import route, run, template, static_file, get, post, request
-from lib import eueauth, euemongo
+from lib import eueauth, euemongo, eueuser
 
 
 def getDataStructure():
@@ -72,6 +72,36 @@ def profile():
             "You must be logged in to access this page",
             {"nav": False})
     else:
+        s = bottle.request.environ.get('beaker.session')
+        data["profile"] = user.get(s['auth']["email"])
+        fields = ["email","password","firstname","lastname"]
+        for field in fields:
+            if not field in data["profile"]:
+                data["profile"][field] = ""
+        return template('profile', page='profile', data=data)
+
+@route('/profile_update')
+def profile_update():
+    """ update user profile """
+    data = getDataStructure()
+    if not isAuth():
+        return redirectWithMessage(
+            "login",
+            "danger",
+            "You must be logged in to access this page",
+            {"nav": False})
+    else:
+        fields = ["email","password","firstname","lastname"]
+        profile = {}
+        for field in fields:
+            if field == "password" 
+                if request.forms.get(field) != "":
+                    profile[field] = request.forms.get(field)
+            else:
+                profile[field] = request.forms.get(field)
+
+        user.update(profile)
+
         return template('profile', page='profile', data=data)
 
 
@@ -150,6 +180,9 @@ if __name__ == '__main__':
 
     mongo = euemongo.mongo(mongohost, monogoport, mongodb)
     mongo.connect()
+
+    """ create an instance of user lib """
+    user = eueuser.user(mongo, "users")
 
     """ create an instance of authentication lib """
     auth = eueauth.auth(mongo, "users")
