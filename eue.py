@@ -5,7 +5,7 @@ import os
 import sys
 from beaker.middleware import SessionMiddleware
 import bottle
-from bottle import route, run, template, static_file, get, post, request
+from bottle import route, run, template, static_file, get, post, request, error
 from lib import eueauth, euemongo, eueuser
 
 
@@ -41,18 +41,27 @@ def isAuth():
 
     return isAuth
 
-def redirectWithMessage(redirectTo,messageType,messageContent,additonalData=None):
+
+def redirectWithMessage(redirectTo, messageType,
+                        messageContent, additonalData=None):
     """ not a real redirect but display a template with message """
     data = getDataStructure()
 
     for key in additonalData:
         data[key] = additonalData[key]
 
-    data["message"]={
+    data["message"] = {
         "type": messageType,
-        "content": messageContent
-        }
+        "content": messageContent}
     return template(redirectTo, page=redirectTo, data=data)
+
+
+@error(404)
+def error_route(code):
+    """ 404 error page """
+    data = getDataStructure()
+    data["nav"] = False
+    return template("error", page="error", data=data)
 
 
 @route('/static/<filename:path>')
@@ -74,11 +83,12 @@ def profile():
     else:
         s = bottle.request.environ.get('beaker.session')
         data["profile"] = user.get(s['auth']["email"])
-        fields = ["email","password","firstname","lastname"]
+        fields = ["email", "password", "firstname", "lastname"]
         for field in fields:
             if not field in data["profile"]:
                 data["profile"][field] = ""
         return template('profile', page='profile', data=data)
+
 
 @route('/profile_update')
 def profile_update():
@@ -91,16 +101,16 @@ def profile_update():
             "You must be logged in to access this page",
             {"nav": False})
     else:
-        fields = ["email","password","firstname","lastname"]
+        fields = ["email", "password", "firstname", "lastname"]
         profile = {}
         for field in fields:
-            if field == "password" 
+            if field == "password":
                 if request.forms.get(field) != "":
                     profile[field] = request.forms.get(field)
             else:
                 profile[field] = request.forms.get(field)
 
-        user.update(profile)
+        result = user.update(profile)
 
         return template('profile', page='profile', data=data)
 
