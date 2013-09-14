@@ -6,4 +6,9 @@
 <input name="password" id="password" type="password" class="form-control" placeholder="Password">
 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 </form>
+%if "message" in data:
+<div class="alert alert-{{data["message"]["type"]}}">
+{{data["message"]["content"]}}
+</div>
+%end
 </div>

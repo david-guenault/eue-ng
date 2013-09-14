@@ -35,13 +35,24 @@ def isAuth():
     isAuth = False
     s = bottle.request.environ.get('beaker.session')
 
-    print s
-
     if "auth" in s:
         if s["auth"]["isAuth"]:
             isAuth = True
 
     return isAuth
+
+def redirectWithMessage(redirectTo,messageType,messageContent,additonalData=None):
+    """ not a real redirect but display a template with message """
+    data = getDataStructure()
+
+    for key in additonalData:
+        data[key] = additonalData[key]
+
+    data["message"]={
+        "type": messageType,
+        "content": messageContent
+        }
+    return template(redirectTo, page=redirectTo, data=data)
 
 
 @route('/static/<filename:path>')
@@ -53,10 +64,14 @@ def static(filename):
 @route('/profile')
 def profile():
     """ profile page """
+    data = getDataStructure()
     if not isAuth():
-        bottle.redirect("/login")
+        return redirectWithMessage(
+            "login",
+            "danger",
+            "You must be logged in to access this page",
+            {"nav": False})
     else:
-        data = getDataStructure()
         return template('profile', page='profile', data=data)
 
 
@@ -64,7 +79,11 @@ def profile():
 def index():
     """ index page """
     if not isAuth():
-        bottle.redirect("/login")
+        return redirectWithMessage(
+            "login",
+            "danger",
+            "You must be logged in to access this page",
+            {"nav": False})
     else:
         data = getDataStructure()
         return template('index', page='index', data=data)
@@ -97,8 +116,6 @@ def do_login():
     user = request.forms.get("user")
     password = request.forms.get("password")
 
-    print "AUTH:%s %s" % (user, password)
-
     if len(user) > 0 and len(password) > 0:
         if auth.login(user, password):
             s = bottle.request.environ.get('beaker.session')
@@ -107,12 +124,17 @@ def do_login():
             s['auth']['email'] = user
             bottle.redirect("/")
         else:
-            print "AUTH: Invalid user name and/or password"
-            bottle.redirect("/login")
+            return redirectWithMessage(
+                "login",
+                "danger",
+                "Invalid user name and/or password",
+                {"nav": False})
     else:
-        print "AUTH:user and password are mandatory"
-        bottle.redirect("/login")
-
+        return redirectWithMessage(
+            "login",
+            "danger",
+            "User and password are mandatory",
+            {"nav": False})
 
 if __name__ == '__main__':
 
