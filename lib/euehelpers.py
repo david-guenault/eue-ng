@@ -14,7 +14,10 @@ def check_mail(email):
     """
 
     regex = r"^[_.0-9A-Za-z-]+@([0-9A-Za-z][0-9A-Za-z-]+.)+[A-Za-z]{2,4}$"
-    if not re.match(regex, email):
+    try:
+        if not re.match(regex, email):
+            return False
+        else:
+            return True
+    except:
         return False
-    else:
-        return True

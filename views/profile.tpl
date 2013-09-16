@@ -1,4 +1,5 @@
 %rebase layout globals(), title="accueil", css=["layout","icons"]
+%print data
 % if "profile" in data:
   % email=data["profile"]["email"]
   % firstname=data["profile"]["firstname"]
@@ -17,23 +18,23 @@
         </div>
       </div>
       <div class="panel-body">      
-        <form name="formprofile" id="formprofile" class="form-horizontal" role="form" method="post" action="/profil_update">
+        <form name="formprofile" id="formprofile" name="formprofile" class="form-horizontal" role="form" method="post" action="/profile_update">
           <div class="form-group">
             <label for="password" class="col-lg-2 control-label">Password</label>
             <div class="col-lg-10">
-              <input type="password" class="form-control" id="password" placeholder="Password">
+              <input type="password" class="form-control" id="password" name="password" placeholder="Password">
             </div>
           </div>
           <div class="form-group">
             <label for="firstname" class="col-lg-2 control-label">Firstname</label>
             <div class="col-lg-10">
-              <input type="password" class="form-control" id="firstname" placeholder="Password" value="{{firstname}}">
+              <input type="text" class="form-control" id="firstname" name="firstname" placeholder="First name" value="{{firstname}}">
             </div>
           </div>
           <div class="form-group">
             <label for="lastname" class="col-lg-2 control-label">Lastname</label>
             <div class="col-lg-10">
-              <input type="password" class="form-control" id="lastname" placeholder="Password" value="{{lastname}}">
+              <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last name" value="{{lastname}}">
             </div>
           </div>
           <div class="form-group">
