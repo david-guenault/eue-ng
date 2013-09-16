@@ -108,26 +108,28 @@ class user:
         if not self.validate(user):
             return False
 
+        clone = user.copy()
+
         """ first check if a document with the same email already exist """
-        usr = self.get(user["email"])
+        usr = self.get(clone["email"])
         if usr:
             self.log(source="new",
                      content="user with the same email already exist",
-                     data=user)
+                     data=clone)
             return False
 
         """ create new user """
         try:
-            id = self.mongo.db[self.collection].insert(user)
+            id = self.mongo.db[self.collection].insert(clone)
             self.log(mtype="success",
                      source="new",
                      content="added user with id %s" % id,
-                     data=user)
+                     data=clone)
             return id
         except:
             self.log(source="new",
                      content="Mongo client raise an insert exception",
-                     data=user)
+                     data=clone)
             return False
 
     """ update user """
@@ -136,10 +138,12 @@ class user:
         if not self.validateUpdate(user):
             return False
         else:
+            email = user["email"]
             criteria = {"email": user["email"]}
             del user["email"]
             try:
                 self.mongo.db[self.collection].update(criteria, {"$set": user})
+                user["email"] = email
                 return True
             except:
                 self.log(source="update",
@@ -202,7 +206,7 @@ if __name__ == '__main__':
         "lastname": "guenault",
         "password": ""})
     u.log(source="instance", content="get user", data={})
-    print u.get("david.guenault@gmail.com")
+    u.get("david.guenault@gmail.com")
     u.log(source="instance", content="delete user", data={})
     u.delete("david.guenault@gmail.com")
     m.disconnect()

@@ -40,11 +40,11 @@ class TestUser(unittest.TestCase):
     """ test user creation """
     def test001_createUser(self):
         """
-            try to create a user with blank user and password : should fail
-            try to create a user with a blank password : should fail
-            try to create a user with a blank email : should fail
-            try to create a user with user and password : should success
-            try to create a user with email allready in database should fail
+            > try to create a user with blank user and password : should fail
+            > try to create a user with a blank password : should fail
+            > try to create a user with a blank email : should fail
+            > try to create a user with user and password : should success
+            > try to create a user with email allready in database should fail
         """
         cases = [
             {"email": "",
@@ -137,8 +137,6 @@ class TestUser(unittest.TestCase):
             "firstname": "David",
             "lastname": "GUENAULT"})
 
-        print self.user.get("david.guenault@gmail.com")
-
     """ test user deletion """
     def test004_deleteUser(self):
         """
@@ -151,6 +149,34 @@ class TestUser(unittest.TestCase):
             "email": "david.guenault@gmail.com",
             "password": "abcd"})
         assert self.user.delete("david.guenault@gmail.com")
+
+    """ test that dict passed to method are not altered """
+    def test005_alteration(self):
+        original = {"email": "david.guenault@gmail.com",
+                    "password": "dfgdfg",
+                    "firstname": "David",
+                    "lastname": "GUENAULT"}
+
+        """ test for create """
+        clone = original.copy()
+        self.user.new(clone)
+        """ check we have the same number of elements for _id """
+        assert len(original) == len(clone)
+        """ check keys are not altered """
+        for key in original:
+            assert key in clone
+            assert original[key] == clone[key]
+
+        """ test for update """
+        clone = original.copy()
+        self.user.update(clone)
+        """ check we have the same number of elements """
+        assert len(original) == len(clone)
+        """ check keys are not altered """
+        for key in original:
+            assert key in clone
+            assert original[key] == clone[key]
+        """ no test for delete because string is immutable """
 
 if __name__ == '__main__':
     unittest.main()
