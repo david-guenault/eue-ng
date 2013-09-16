@@ -208,6 +208,20 @@ def do_login():
             "User and password are mandatory",
             {"nav": False})
 
+
+@route("/users")
+def users():
+    """ users management page """
+    if not isAuth():
+        return redirectWithMessage(
+            "users",
+            "danger",
+            "You must be logged in to access this page",
+            {"nav": False})
+    else:
+        data = getDataStructure()
+        return template('users', page='users', data=data)
+
 if __name__ == '__main__':
 
     mongohost = "localhost"

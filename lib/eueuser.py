@@ -15,6 +15,17 @@ class user:
         self.collection = collection
         return
 
+    def getUserStructure():
+        """ default data structure for user """
+        return {"email": None,
+                "password": None,
+                "firstname": None,
+                "lastname": None
+                "acl": {
+                    "isadmin": False,
+                    "access": {"profile": ["read", "update"]}}
+                }
+
     def log(self,
             scope="private", source="",
             mtype="danger", content="", data=""):
