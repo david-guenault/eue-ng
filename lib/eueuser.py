@@ -20,11 +20,8 @@ class user:
         return {"email": None,
                 "password": None,
                 "firstname": None,
-                "lastname": None
-                "acl": {
-                    "isadmin": False,
-                    "access": {"profile": ["read", "update"]}}
-                }
+                "lastname": None,
+                "acl": {"isadmin": False}}
 
     def log(self,
             scope="private", source="",
