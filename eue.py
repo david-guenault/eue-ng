@@ -113,6 +113,21 @@ def profile():
         return template('profile', page='profile', data=data)
 
 
+@post('/profile_add')
+def profile_add():
+    session = getSession()
+    """ create new user """
+    data = getDataStructure()
+    if not isAuth():
+        return redirectWithMessage(
+            "profile_update",
+            "danger",
+            "You must be logged in to access this page",
+            {"nav": False})
+    else:
+        return template('users', page='users', data=data)
+
+
 @post('/profile_update')
 def profile_update():
     session = getSession()
