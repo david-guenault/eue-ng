@@ -46,40 +46,56 @@ class TestUser(unittest.TestCase):
             > try to create a user with user and password : should success
             > try to create a user with email allready in database should fail
         """
-        cases = [
-            {"email": "",
+        user = {"email": "",
                 "password": "",
                 "firstname": "",
-                "lastname": "",
-                "assert": False},
-            {"email": "david.guenault@gmail.com",
+                "lastname": ""}
+        assert not self.user.new(case)
+        user = {"email": "david.guenault@gmail.com",
                 "password": "",
                 "firstname": "",
-                "lastname": "",
-                "assert": False},
-            {"email": "",
+                "lastname": ""}
+        assert not self.user.new(case)
+        user = {"email": "",
                 "password": "dfgdfg",
                 "firstname": "",
-                "lastname": "",
-                "assert": False},
-            {"email": "david.guenault@gmail.com",
+                "lastname": ""}
+        assert not self.user.new(case)
+        user = {"email": "david.guenault@gmail.com",
                 "password": "dfgdfg",
                 "firstname": "",
-                "lastname": "",
-                "assert": "notempty"},
-            {"email": "david.guenault@gmail.com",
+                "lastname": ""}
+        assert self.user.new(case) != ""
+        user = {"email": "david.guenault@gmail.com",
                 "password": "dfgdfg",
                 "firstname": "",
-                "lastname": "",
-                "assert": False}]
+                "lastname": ""}
+        assert not self.user.new(case) != ""
 
-        for case in cases:
-            if not case["assert"]:
-                assert not self.user.new(case)
-            if case["assert"]:
-                assert self.user.new(case)
-            if case["assert"] is "notempty":
-                assert self.user.new(case) != ""
+    """ test non admin user creation """
+    def test002_createAdminUser(self):
+        """ default should be a non admin user """
+        user = self.user.getUserStructure()
+        user.email = "david.guenault@gmail.com"
+        user.password = "dfgdfg"
+        user.firstname = "David"
+        user.lastname = "GUENAULT"
+
+        """ user must return non empty """
+        result = self.user.new(user)
+        assert result != ""
+
+        """ get created user """
+        u = self.user.get(user.email)
+
+        """ there should be an acl key and in acl """
+        """ there should be an isAdmin key """
+        """ user should not be admin by default """
+
+        assert "acl" in u
+        assert u["acl"] is dict
+        assert "isAdmin" in u["acl"]
+        assert not u["acl"]["isAdmin"]
 
     """ test get user """
     def test002_getUser(self):
