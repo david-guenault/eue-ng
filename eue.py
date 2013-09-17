@@ -214,7 +214,7 @@ def users():
     """ users management page """
     if not isAuth():
         return redirectWithMessage(
-            "users",
+            "login",
             "danger",
             "You must be logged in to access this page",
             {"nav": False})
