@@ -25,7 +25,7 @@
         %include
         <script type="text/javascript" charset="utf-8">
             $(document).ready(function() {
-
+                $('.st').tooltip({container:'body'});
             } );
         </script>
     </body>
