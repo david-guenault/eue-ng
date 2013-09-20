@@ -77,8 +77,8 @@ if __name__ == '__main__':
     app = bottle.app()
     bottle.run(
         app=app,
-        host='localhost',
-        port=8080,
+        host='37.187.6.69',
+        port=80,
         reloader=True,
         debug=True
     )

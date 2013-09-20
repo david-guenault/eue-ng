@@ -1,4 +1,5 @@
-%rebase layout globals(), title="buttons", css=[], js=[]
+%rebase layout globals(), title="Statistics", css=[ "bootstrap/css/bootstrap.min.css", "bootstrap/css/bootstrap-responsive.min.css", "assets/styles.css", "vendors/datepicker.css"], js=["vendors/modernizr-2.6.2-respond-1.1.0.min.js"], jslate=["vendors/jquery-1.9.1.min.js", "bootstrap/js/bootstrap.min.js", "assets/scripts.js"]
+
                 <div class="span9" id="content">
                     <div class="row-fluid">
                         <div class="span6">
