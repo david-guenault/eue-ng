@@ -15,7 +15,7 @@ class user:
         self.collection = collection
         return
 
-    def getUserStructure():
+    def getUserStructure(self):
         """ default data structure for user """
         return {"email": None,
                 "password": None,
@@ -116,6 +116,14 @@ class user:
         if not self.validate(user):
             return False
 
+        """ create acl.isAdmin key if not present """
+        """ default to False """
+        if not "acl" in user:
+            user["acl"] = {"isAdmin": False}
+
+        if not "isAdmin" in user["acl"]:
+            user["acl"]["isAdmin"] = False
+
         clone = user.copy()
 
         """ first check if a document with the same email already exist """
@@ -198,35 +206,55 @@ class user:
         del result[0]["_id"]
         return result[0]
 
+    def findregex(self, pattern, where):
+        if not isinstance(where, list):
+            return False
+
+        """ build search clause over where field list """
+        clause = []
+        for f in where:
+            clause.append({f: {"$regex": pattern}})
+        clause = {'$or': clause}
+
+        # try:
+        results = []
+        c = self.mongo.db[self.collection].find(clause)
+        if c.count() == 0:
+            return []
+        else:
+            for row in c:
+                results.append(row)
+            return results
+
+
 if __name__ == '__main__':
     from lib import euemongo
+
     m = euemongo.mongo(host="localhost", port=27017, database="eue")
-    m.connect()
     u = user(m, "users")
-    u.log(source="instance", content="delete user", data={})
-    u.delete("david.guenault@gmail.com")
-    u.log(source="instance", content="new user", data={})
-    u.new({"email": "david.guenault@gmail.com", "password": "dfgdfg"})
-    u.log(source="instance", content="update user", data={})
-    u.update({
-        "email": "david.guenaultgmail.com",
-        "firstname": "david",
-        "lastname": "guenault",
-        "password": ""})
-    u.log(source="instance", content="get user", data={})
-    u.get("david.guenault@gmail.com")
-    u.log(source="instance", content="delete user", data={})
-    u.delete("david.guenault@gmail.com")
-    m.disconnect()
-    print "+{:-^114}+".format("")
-    topHeader = "| {:>5} | {:<15} | {:<10} | {:<10} | {:<60} |"
-    rowContent = "| {:>5} | {:<15} | {:<10} | {:<10} | {:<60} |"
-    print topHeader.format("order", "source", "scope", "type", "content")
-    print "+{:-^114}+".format("")
-    for line in u.userlog:
-        print rowContent.format(line["order"],
-                                line["source"],
-                                line["scope"],
-                                line["type"],
-                                line["content"])
-    print "+{:-^114}+".format("")
+    m.connect()
+    col = m.getDb("users")
+
+    """ create a test user set """
+    users = [{"email": "david.guenault@gmail.com",
+              "password": "dfgdfg",
+              "firstname": "David",
+              "lastname": "GUENAULT"},
+             {"email": "naparuba@gmail.com",
+              "password": "dfgdfg",
+              "firstname": "Jean",
+              "lastname": "GABES"},
+             {"email": "toto@titi.com",
+              "password": "dfgdfg",
+              "firstname": "toto",
+              "lastname": "TITI"}]
+
+    for user in users:
+        u.new(user)
+
+    """ search coverage """
+    pattern = "gmail.com"
+    where = ["email", "firstname", "lastname"]
+    result = u.findregex(pattern, where)
+    for r in result:
+        print r

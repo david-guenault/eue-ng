@@ -50,51 +50,51 @@ class TestUser(unittest.TestCase):
                 "password": "",
                 "firstname": "",
                 "lastname": ""}
-        assert not self.user.new(case)
+        assert not self.user.new(user)
         user = {"email": "david.guenault@gmail.com",
                 "password": "",
                 "firstname": "",
                 "lastname": ""}
-        assert not self.user.new(case)
+        assert not self.user.new(user)
         user = {"email": "",
                 "password": "dfgdfg",
                 "firstname": "",
                 "lastname": ""}
-        assert not self.user.new(case)
+        assert not self.user.new(user)
         user = {"email": "david.guenault@gmail.com",
                 "password": "dfgdfg",
                 "firstname": "",
                 "lastname": ""}
-        assert self.user.new(case) != ""
+        assert self.user.new(user) != ""
         user = {"email": "david.guenault@gmail.com",
                 "password": "dfgdfg",
                 "firstname": "",
                 "lastname": ""}
-        assert not self.user.new(case) != ""
+        """ should not pass because user already exist """
+        assert not self.user.new(user)
 
     """ test non admin user creation """
-    def test002_createAdminUser(self):
+    def test002_createNonAdminUser(self):
         """ default should be a non admin user """
         user = self.user.getUserStructure()
-        user.email = "david.guenault@gmail.com"
-        user.password = "dfgdfg"
-        user.firstname = "David"
-        user.lastname = "GUENAULT"
+        user["email"] = "david.guenault@gmail.com"
+        user["password"] = "dfgdfg"
+        user["firstname"] = "David"
+        user["lastname"] = "GUENAULT"
 
         """ user must return non empty """
         result = self.user.new(user)
         assert result != ""
 
         """ get created user """
-        u = self.user.get(user.email)
+        u = self.user.get(user["email"])
 
         """ there should be an acl key and in acl """
-        """ there should be an isAdmin key """
-        """ user should not be admin by default """
-
         assert "acl" in u
-        assert u["acl"] is dict
+        assert isinstance(u["acl"], dict)
+        """ there should be an isAdmin key """
         assert "isAdmin" in u["acl"]
+        """ user should not be admin by default """
         assert not u["acl"]["isAdmin"]
 
     """ test get user """
@@ -171,7 +171,8 @@ class TestUser(unittest.TestCase):
         original = {"email": "david.guenault@gmail.com",
                     "password": "dfgdfg",
                     "firstname": "David",
-                    "lastname": "GUENAULT"}
+                    "lastname": "GUENAULT",
+                    "acl": {"isAdmin": True}}
 
         """ test for create """
         clone = original.copy()
@@ -182,7 +183,6 @@ class TestUser(unittest.TestCase):
         for key in original:
             assert key in clone
             assert original[key] == clone[key]
-
         """ test for update """
         clone = original.copy()
         self.user.update(clone)
@@ -193,6 +193,43 @@ class TestUser(unittest.TestCase):
             assert key in clone
             assert original[key] == clone[key]
         """ no test for delete because string is immutable """
+
+    def test006_search(self):
+        """ test user search """
+        """ create a set of users """
+        users = [{"email": "david.guenault@gmail.com",
+                  "password": "dfgdfg",
+                  "firstname": "David",
+                  "lastname": "GUENAULT"},
+                 {"email": "naparuba@gmail.com",
+                  "password": "dfgdfg",
+                  "firstname": "Jean",
+                  "lastname": "GABES"},
+                 {"email": "toto@titi.com",
+                  "password": "dfgdfg",
+                  "firstname": "toto",
+                  "lastname": "TITI"}]
+        for user in users:
+            self.user.new(user)
+
+        """ pattern to serch """
+        pattern = "gmail.com"
+
+        """ search coverage """
+        where = ["email", "firstname", "lastname", "email"]
+
+        """ do the search in regex mode """
+        result = self.user.findregex(pattern, where)
+
+        """ test result count should be 2 records """
+        assert result is not False
+        assert not isinstance(result, bool)
+        assert len(result) == 2
+        """ if no result should return empty list """
+        # pattern = "42"
+        # result = self.user.findregex(pattern, where)
+        # print result
+        # assert result is not False
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,32 +1,140 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="fr-FR">
-    <head profile="http://gmpg.org/xfn/11">
-        <meta http-equiv="cache-control" content="max-age=0" />
-        <meta http-equiv="cache-control" content="no-cache" />
-        <meta http-equiv="expires" content="0" />
-        <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
-        <meta http-equiv="pragma" content="no-cache" />        
-        <title>{{title or ""}}</title>
-        <link href="/static/jquery/plugins/DataTables/media/css/demo_table.css" rel="stylesheet" media="screen"> 
-        <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-        %for c in css:
-            <link href="/static/css/{{c}}.css" rel="stylesheet" media="screen">        
+<!DOCTYPE html>
+<html class="no-js">
+    
+    <head>
+        <title>{{title}}</title>
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        %for style in css:
+        <link href="static/{{style}}" rel="stylesheet" media="screen">
         %end
-        <script type="text/javascript" language="javascript" src="/static/jquery/jquery.min.js"></script>
-        <script type="text/javascript" language="javascript" src="/static/jquery/plugins/DataTables/media/js/jquery.dataTables.js"></script>
-        <script src="/static/bootstrap/js/bootstrap.min.js"></script>
-        <script src="/static/raphael/raphael-min.js"></script>
-        <script src="/static/raphael/plugins/justGage/resources/js/justgage.1.0.1.min.js"></script>
-    </head>    
+        %for jscript in js:
+        <script src="static/{{jscript}}"></script>
+        %end        
+    </head>
+    
     <body>
-        %if data["nav"]:
-            %include nav.tpl
-        %end
-        %include
-        <script type="text/javascript" charset="utf-8">
-            $(document).ready(function() {
-                $('.st').tooltip({container:'body'});
-            } );
-        </script>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="#">Admin Panel</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right">
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i> Vincent Gabriel <i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="#">Profile</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a tabindex="-1" href="login">Logout</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="nav">
+                            <li class="active">
+                                <a href="#">Dashboard</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Settings <b class="caret"></b>
+
+                                </a>
+                                <ul class="dropdown-menu" id="menu1">
+                                    <li>
+                                        <a href="#">Tools <i class="icon-arrow-right"></i>
+
+                                        </a>
+                                        <ul class="dropdown-menu sub-menu">
+                                            <li>
+                                                <a href="#">Reports</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Logs</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Errors</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">SEO Settings</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Other Link</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="#">Other Link</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Other Link</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Content <i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="#">Blog</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="#">News</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="#">Custom Pages</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="#">Calendar</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a tabindex="-1" href="#">FAQ</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Users <i class="caret"></i>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a tabindex="-1" href="#">User List</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="#">Search</a>
+                                    </li>
+                                    <li>
+                                        <a tabindex="-1" href="#">Permissions</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                %include sidebar.tpl
+                %include
+            </div>
+        </div> 
+        %for jscript in jslate:
+        <script src="static/{{jscript}}"></script>
+        %end        
     </body>
+
 </html>

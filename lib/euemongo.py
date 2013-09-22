@@ -39,6 +39,9 @@ class mongo:
         except:
             return False
 
+    def getDb(self, db):
+        return self.db[db]
+
     def disconnect(self):
         try:
             self.cn.close()

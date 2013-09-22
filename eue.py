@@ -226,16 +226,16 @@ def do_login():
 
 @route("/users")
 def users():
-    """ users management page """
-    if not isAuth():
-        return redirectWithMessage(
-            "login",
-            "danger",
-            "You must be logged in to access this page",
-            {"nav": False})
-    else:
-        data = getDataStructure()
-        return template('users', page='users', data=data)
+    # """ users management page """
+    # if not isAuth():
+    #     return redirectWithMessage(
+    #         "login",
+    #         "danger",
+    #         "You must be logged in to access this page",
+    #         {"nav": False})
+    # else:
+    data = getDataStructure()
+    return template('users', page='users', data=data)
 
 if __name__ == '__main__':
 
