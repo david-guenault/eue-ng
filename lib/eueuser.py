@@ -216,9 +216,9 @@ class user:
             clause.append({f: {"$regex": pattern}})
         clause = {'$or': clause}
 
-        # try:
         results = []
         c = self.mongo.db[self.collection].find(clause)
+        print c.count()
         if c.count() == 0:
             return []
         else:

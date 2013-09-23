@@ -236,9 +236,8 @@ def users():
     # else:
     data = getDataStructure()
     where = ["email", "firstname", "lastname", "email"]
-    users = user.findregex("", where)
-
-    data["users"] = users
+    result = user.findregex("", where)
+    data["users"] = result
 
     return template('users', page='users', data=data)
 
