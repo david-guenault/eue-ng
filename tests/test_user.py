@@ -225,6 +225,15 @@ class TestUser(unittest.TestCase):
         assert result is not False
         assert not isinstance(result, bool)
         assert len(result) == 2
+
+        """ search for everything """
+        pattern = ""
+        result = self.user.findregex(pattern, where)
+
+        assert result is not False
+        assert not isinstance(result, bool)
+        assert len(result) == 3
+
         """ if no result should return empty list """
         # pattern = "42"
         # result = self.user.findregex(pattern, where)
