@@ -235,6 +235,11 @@ def users():
     #         {"nav": False})
     # else:
     data = getDataStructure()
+    where = ["email", "firstname", "lastname", "email"]
+    users = user.findregex("", where)
+
+    data["users"] = users
+
     return template('users', page='users', data=data)
 
 if __name__ == '__main__':

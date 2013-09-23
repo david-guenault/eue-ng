@@ -1,5 +1,7 @@
 %rebase layout globals(), title="Users", css=["bootstrap/css/bootstrap.min.css", "bootstrap/css/bootstrap-responsive.min.css", "assets/styles.css", "assets/DT_bootstrap.css"], js=["vendors/modernizr-2.6.2-respond-1.1.0.min.js"], jslate=["vendors/jquery-1.9.1.js", "bootstrap/js/bootstrap.min.js", "vendors/datatables/js/jquery.dataTables.min.js", "assets/scripts.js", "assets/DT_bootstrap.js"]
 
+{{data}}
+
 <div class="span9" id="content">
 
      <div class="row-fluid">
