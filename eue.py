@@ -113,6 +113,17 @@ def profile():
         return template('profile', page='profile', data=data)
 
 
+@route('/user/:email', method='GET')
+def user(email):
+    u = user.get(email)
+    if not u:
+        return {}
+    else:
+        del(u["_id"])
+        del(u["password"])
+        return u
+
+
 @post('/profile_add')
 def profile_add():
     session = getSession()

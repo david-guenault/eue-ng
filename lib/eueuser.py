@@ -206,6 +206,7 @@ class user:
         del result[0]["_id"]
         return result[0]
 
+    """ search users """
     def findregex(self, pattern, where):
         if not isinstance(where, list):
             return False
