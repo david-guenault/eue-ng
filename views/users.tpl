@@ -40,7 +40,7 @@
                             %       isAdmin = ""
                             %   end
                             <tr class="odd gradeX">
-                                <td><a id="edit-{{u["email"]}}" href="#">{{u["email"]}}</a></td>
+                                <td><a id="edit-{{u["email"]}}" href="#modalUser" data-toggle="modal">{{u["email"]}}</a></td>
                                 <td>{{u["firstname"]}}</td>
                                 <td>{{u["lastname"]}}</td>
                                 <td class="center">
@@ -57,4 +57,35 @@
     </div>
 
 
+</div>
+
+<div id="modalUser" class="modal hide" aria-hidden="true" style="display: none;">
+    <div class="modal-header">
+        <button data-dismiss="modal" class="close" type="button">×</button>
+        <h3>User profile</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal">
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="email">Email</label>
+                    <div class="controls">
+                        <input class="input-xlarge" id="email" type="text" value="">
+                    </div>
+                    <label class="control-label" for="firstname">First name</label>
+                    <div class="controls">
+                        <input class="input-xlarge" id="firstname" type="text" value="">
+                    </div>
+                    <label class="control-label" for="lastname">Last name</label>
+                    <div class="controls">
+                        <input class="input-xlarge" id="lastname" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="reset" class="btn">Cancel</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
 </div>

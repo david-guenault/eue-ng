@@ -5,7 +5,7 @@ $(function() {
         $.getJSON('user/'+user)
             .done(function(json){
                 //now fill in modal box and display 
-                
+                $("#modalUser").show();
             })
             .fail(function(jqxhr, textStatus, error){
                 var err = textStatus + ", " + error;
