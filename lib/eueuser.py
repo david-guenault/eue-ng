@@ -21,7 +21,7 @@ class user:
                 "password": None,
                 "firstname": None,
                 "lastname": None,
-                "acl": {"isadmin": False}}
+                "isadmin": False}
 
     def log(self,
             scope="private", source="",
@@ -116,13 +116,10 @@ class user:
         if not self.validate(user):
             return False
 
-        """ create acl.isAdmin key if not present """
+        """ create isAdmin key if not present """
         """ default to False """
-        if not "acl" in user:
-            user["acl"] = {"isAdmin": False}
-
-        if not "isAdmin" in user["acl"]:
-            user["acl"]["isAdmin"] = False
+        if not "isAdmin" in user:
+            user["isAdmin"] = False
 
         clone = user.copy()
 
@@ -217,15 +214,24 @@ class user:
             clause.append({f: {"$regex": pattern}})
         clause = {'$or': clause}
 
-        results = []
-        c = self.mongo.db[self.collection].find(clause)
-        print c.count()
-        if c.count() == 0:
-            return []
-        else:
-            for row in c:
-                results.append(row)
-            return results
+        """ exclude some fields """
+        excluded = ["_id", "password"]
+        exclude = {}
+        for e in excluded:
+            exclude[e] = False
+
+        try:
+            c = self.mongo.db[self.collection].find(clause, exclude)
+            return c
+        except:
+            return False
+        # print c.count()
+        # if c.count() == 0:
+        #     return []
+        # else:
+        #     for row in c:
+        #         results.append(row)
+        #     return results
 
 
 if __name__ == '__main__':

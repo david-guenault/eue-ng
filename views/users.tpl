@@ -1,16 +1,16 @@
-%rebase layout globals(), title="Users", css=["bootstrap/css/bootstrap.min.css", "bootstrap/css/bootstrap-responsive.min.css", "assets/styles.css", "assets/DT_bootstrap.css"], js=["vendors/modernizr-2.6.2-respond-1.1.0.min.js"], jslate=["vendors/jquery-1.9.1.js", "bootstrap/js/bootstrap.min.js", "vendors/datatables/js/jquery.dataTables.min.js", "assets/scripts.js", "assets/DT_bootstrap.js", "js/users.js"]
+%rebase layout globals(), title="Users", css=["bootstrap/css/bootstrap.min.css", "bootstrap/css/bootstrap-responsive.min.css", "assets/styles.css", "assets/DT_bootstrap.css"], js=["vendors/modernizr-2.6.2-respond-1.1.0.min.js"], jslate=["vendors/jquery-1.9.1.js", "bootstrap/js/bootstrap.min.js", "vendors/datatables/js/jquery.dataTables.min.js", "assets/scripts.js", "assets/DT_bootstrap.js", "js/users.js", "vendors/mustache.js"]
 
+%include sidebarusers
 <div class="span9" id="content">
-
      <div class="row-fluid">
         <!-- block -->
         <div class="block">
             <div class="navbar navbar-inner block-header">
-                <div class="muted pull-left">Bootstrap dataTables</div>
+                <div class="muted pull-left">Users</div>
             </div>
             <div class="block-content collapse in">
                 <div class="span12">
-                        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+                        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="users">
                         <thead>
                             <tr>
                                 <th>Email</th>
@@ -20,34 +20,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            %for u in data["users"]:
-                            %   if not "firstname" in u:
-                            %       u["firstname"] = ""
-                            %   end
-                            %   if not "lastname" in u:
-                            %       u["lastname"] = ""
-                            %   end
-                            %   if not "acl" in u:
-                            %       u["acl"]={"isAdmin": False}
-                            %   else:
-                            %       if not "isAdmin" in u["acl"]:
-                            %           u["acl"]["isAdmin"] = False
-                            %       end
-                            %   end
-                            %   if u["acl"]["isAdmin"]:
-                            %       isAdmin = "checked"
-                            %   else:
-                            %       isAdmin = ""
-                            %   end
-                            <tr class="odd gradeX">
-                                <td><a id="edit-{{u["email"]}}" href="#modalUser" data-toggle="modal">{{u["email"]}}</a></td>
-                                <td>{{u["firstname"]}}</td>
-                                <td>{{u["lastname"]}}</td>
-                                <td class="center">
-                                    <input type="checkbox" id="chk-{{u["email"]}}" {{isAdmin}} disabled>
-                                </td>
-                            </tr>
-                            %end
                         </tbody>
                     </table>
                 </div>
@@ -65,27 +37,56 @@
         <h3>User profile</h3>
     </div>
     <div class="modal-body">
-        <form class="form-horizontal">
+        
+        <div id="usermessage" class="alert alert-block hide">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+<!--             <h4 class="alert-heading">Error</h4>
+            Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+ -->        </div>        
+        <form id="frmuser" method="post" action="updateuser" class="form-horizontal">
             <fieldset>
                 <div class="control-group">
                     <label class="control-label" for="email">Email</label>
                     <div class="controls">
-                        <input class="input-xlarge" id="email" type="text" value="">
+                        <input class="input-xlarge" disabled id="email" type="text" value="">
                     </div>
+                </div>
+                <div class="control-group">
                     <label class="control-label" for="firstname">First name</label>
                     <div class="controls">
                         <input class="input-xlarge" id="firstname" type="text" value="">
                     </div>
+                </div>
+                <div class="control-group">
                     <label class="control-label" for="lastname">Last name</label>
                     <div class="controls">
                         <input class="input-xlarge" id="lastname" type="text" value="">
                     </div>
                 </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                    <button type="reset" class="btn">Cancel</button>
+                <div class="control-group">
+                    <label class="control-label" for="isadmin">Admin ?</label>
+                    <div class="controls">
+                        <input class="input-xlarge" id="isadmin" type="checkbox" value="">
+                    </div>
                 </div>
             </fieldset>
+            <div class="form-actions">
+                <button id="usersave" type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" data-dismiss="modal" class="btn">Close</button>
+            </div>            
         </form>
     </div>
 </div>
+
+<script id="userrow" type="text/template">
+<%#users%>
+<tr class="odd gradeX">
+    <td><a class="email" href="#modalUser" data-toggle="modal"><a class="email" href="#modalUser" data-toggle="modal"><%email%></a></a></td>
+    <td><%firstname%></td>
+    <td><%lastname%></td>
+    <td class="center">
+        <input type="checkbox"  <%isAdmin%> disabled>
+    </td>
+</tr>
+<%/users%>
+</script>

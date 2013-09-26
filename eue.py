@@ -6,8 +6,10 @@ import sys
 from beaker.middleware import SessionMiddleware
 import bottle
 from bottle import route, run, template, static_file, get, post
-from bottle import request, error, hook
+from bottle import request, error, hook, response
 from lib import eueauth, euemongo, eueuser
+# from json import dumps
+from bson.json_util import dumps
 
 
 def getDataStructure():
@@ -39,6 +41,7 @@ def getSessionStructure():
     """ return an empty session dict """
     return {
         "isAuth": False,
+        "isAdmin": False,
         "email": ""
     }
 
@@ -122,6 +125,39 @@ def user(email):
         del(u["_id"])
         del(u["password"])
         return u
+
+
+@route('/updateuser', method='POST')
+def updateuser():
+    """ update user through ajax request """
+    response.content_type = 'application/json'
+    try:
+        session = getSession()
+        """ does the current user is authenticated ? """
+        if not isAuth():
+            result = {"result": False, "message": "authentication error"}
+        else:
+            """ am i an admin ? """
+            if not session['auth']["isAdmin"]:
+                result = {"result": False, "message": "authorization error"}
+            else:
+                """ ok do update """
+                if request.forms.get("isadmin") == 'true':
+                    isAdmin = True
+                else:
+                    isAdmin = False
+                u = {"email": request.forms.get("email"),
+                     "firstname": request.forms.get("firstname"),
+                     "lastname": request.forms.get("lastname"),
+                     "acl": {"isAdmin": isAdmin}}
+                if not user.update(u):
+                    result = {"result": False, "message": "Update failed"}
+                else:
+                    result = {"result": True, "message": "OK"}
+    except:
+        result = {"result": False, "message": "Unknow error"}
+
+    return dumps(result)
 
 
 @post('/profile_add')
@@ -211,15 +247,17 @@ def do_login():
     data = getDataStructure()
     data["nav"] = False
 
-    user = request.forms.get("user")
+    usr = request.forms.get("user")
     password = request.forms.get("password")
 
-    if len(user) > 0 and len(password) > 0:
-        if auth.login(user, password):
+    if len(usr) > 0 and len(password) > 0:
+        if auth.login(usr, password):
+            u = user.get(usr)
             s = bottle.request.environ.get('beaker.session')
             s['auth'] = getSessionStructure()
             s['auth']['isAuth'] = True
-            s['auth']['email'] = user
+            s['auth']['isAdmin'] = u["isAdmin"]
+            s['auth']['email'] = usr
             bottle.redirect("/")
         else:
             return redirectWithMessage(
@@ -235,22 +273,37 @@ def do_login():
             {"nav": False})
 
 
+@route("/users/:output")
 @route("/users")
-def users():
-    # """ users management page """
-    # if not isAuth():
-    #     return redirectWithMessage(
-    #         "login",
-    #         "danger",
-    #         "You must be logged in to access this page",
-    #         {"nav": False})
-    # else:
-    data = getDataStructure()
-    where = ["email", "firstname", "lastname", "email"]
-    result = user.findregex("", where)
-    data["users"] = result
+def users(output="standard"):
+    """ users management page """
 
-    return template('users', page='users', data=data)
+    session = getSession()
+
+    if output == "json" or output == "jsondt":
+        response.content_type = 'application/json'
+
+    if not isAuth():
+        if output == "json" or output == "jsondt":
+            return dumps({"result": False, "message": "authentication error"})
+        else:
+            return redirectWithMessage(
+                "login",
+                "danger",
+                "You must be logged in to access this page",
+                {"nav": False})
+    else:
+        data = getDataStructure()
+        where = ["email", "firstname", "lastname", "email"]
+        result = user.findregex("", where)
+        if output == "json" or output == "jsondt":
+            if output == "jsondt":
+                result = {"aaData": result}
+            return dumps(result)
+        else:
+            data["users"] = result
+            return template('users', page='users', data=data)
+
 
 if __name__ == '__main__':
 

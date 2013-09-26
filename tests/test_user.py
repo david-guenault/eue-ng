@@ -89,13 +89,10 @@ class TestUser(unittest.TestCase):
         """ get created user """
         u = self.user.get(user["email"])
 
-        """ there should be an acl key and in acl """
-        assert "acl" in u
-        assert isinstance(u["acl"], dict)
         """ there should be an isAdmin key """
-        assert "isAdmin" in u["acl"]
+        assert "isAdmin" in u
         """ user should not be admin by default """
-        assert not u["acl"]["isAdmin"]
+        assert not u["isAdmin"]
 
     """ test get user """
     def test002_getUser(self):
@@ -172,7 +169,7 @@ class TestUser(unittest.TestCase):
                     "password": "dfgdfg",
                     "firstname": "David",
                     "lastname": "GUENAULT",
-                    "acl": {"isAdmin": True}}
+                    "isAdmin": True}
 
         """ test for create """
         clone = original.copy()
@@ -224,7 +221,7 @@ class TestUser(unittest.TestCase):
         """ test result count should be 2 records """
         assert result is not False
         assert not isinstance(result, bool)
-        assert len(result) == 2
+        assert result.count() == 2
 
         """ search for everything """
         pattern = ""
@@ -232,7 +229,7 @@ class TestUser(unittest.TestCase):
 
         assert result is not False
         assert not isinstance(result, bool)
-        assert len(result) == 3
+        assert result.count() == 3
 
         """ if no result should return empty list """
         # pattern = "42"

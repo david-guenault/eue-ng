@@ -1,12 +1,12 @@
 <div class="span3" id="sidebar">
     <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
         <li class="active">
-            <a href="index"><i class="icon-chevron-right"></i> Users list</a>
+            <a href="users"><i class="icon-chevron-right"></i> Users list</a>
         </li>
         <li>
-            <a href="calendar"><i class="icon-chevron-right"></i> Create user</a>
+            <a href="#"><i class="icon-chevron-right"></i> Create user</a>
         </li>
-        <li>
+<!--         <li>
             <a href="stats"><i class="icon-chevron-right"></i> Statistics (Charts)</a>
         </li>
         <li>
@@ -47,6 +47,6 @@
         </li>
         <li>
             <a href="#"><span class="badge badge-warning pull-right">4,231</span> Logs</a>
-        </li>
+        </li> -->
     </ul>
 </div>

@@ -48,7 +48,7 @@ for s in sex:
                 "email": user["user"]["email"],
                 "password": user["user"]["password"],
                 "picture": filename,
-                "acl": {"isAdmin": isAdmin}
+                "isAdmin": isAdmin
             }
             generated.append(u)
 
