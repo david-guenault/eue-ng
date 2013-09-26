@@ -87,7 +87,10 @@ $(function() {
                     return '<input type="checkbox" checked disabled />';
                 }else{
                     return '<input type="checkbox" disabled />';
-                }}}            
+            }}},
+            { "mData": "select", "mRender": function(data,type,full) {
+                return '<input type="checkbox"/>';
+            }}            
         ]
     }
 

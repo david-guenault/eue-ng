@@ -13,6 +13,7 @@
                         <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="users">
                         <thead>
                             <tr>
+                                <th>&nbsp;</th>
                                 <th>Email</th>
                                 <th>First name</th>
                                 <th>Last name(s)</th>

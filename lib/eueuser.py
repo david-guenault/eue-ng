@@ -212,17 +212,38 @@ class user:
         clause = []
         for f in where:
             clause.append({f: {"$regex": pattern}})
-        clause = {'$or': clause}
+
+        project = {}
 
         """ exclude some fields """
         excluded = ["_id", "password"]
-        exclude = {}
-        for e in excluded:
-            exclude[e] = False
+        for e in project:
+            project[e] = 0
+
+        """ project """
+        fields = ["firstname", "lastname", "email", "select"]
+        for e in fields:
+            project[e] = "$%s" % (e)
+
+        """
+          db.users.aggregate(
+            {$match: {$or:[{email: /gmail/},
+                           {firstname: /gmail/}]}},
+            {$project: {firstname:"$firstname",
+                        lastname:"$lastname",
+                        email:"$email",
+                        isAdmin:"$isAdmin",
+                        _id:0
+                        }}).result;
+        """
 
         try:
-            c = self.mongo.db[self.collection].find(clause, exclude)
-            return c
+            print {"$project": project}
+            c = self.mongo.db[self.collection].aggregate(
+                {"$match": {"$or": clause}},
+                {"$project": project})
+
+            return c["result"]
         except:
             return False
         # print c.count()
