@@ -1,4 +1,4 @@
-%rebase layout globals(), title="Users", css=["bootstrap/css/bootstrap.min.css", "bootstrap/css/bootstrap-responsive.min.css", "assets/styles.css", "assets/DT_bootstrap.css"], js=["vendors/modernizr-2.6.2-respond-1.1.0.min.js"], jslate=["vendors/jquery-1.9.1.js", "bootstrap/js/bootstrap.min.js", "vendors/datatables/js/jquery.dataTables.min.js", "assets/scripts.js", "assets/DT_bootstrap.js", "js/users.js", "vendors/mustache.js"]
+%rebase layout globals(), title="Users", css=["bootstrap/css/bootstrap.min.css", "bootstrap/css/bootstrap-responsive.min.css", "assets/styles.css", "assets/DT_bootstrap.css"], js=["vendors/modernizr-2.6.2-respond-1.1.0.min.js"], jslate=["vendors/jquery-1.9.1.js", "bootstrap/js/bootstrap.min.js", "vendors/datatables/js/jquery.dataTables.min.js", "assets/scripts.js", "assets/DT_bootstrap.js", "js/users.js"]
 
 %include sidebarusers
 <div class="span9" id="content">
@@ -78,15 +78,3 @@
     </div>
 </div>
 
-<script id="userrow" type="text/template">
-<%#users%>
-<tr class="odd gradeX">
-    <td><a class="email" href="#modalUser" data-toggle="modal"><a class="email" href="#modalUser" data-toggle="modal"><%email%></a></a></td>
-    <td><%firstname%></td>
-    <td><%lastname%></td>
-    <td class="center">
-        <input type="checkbox"  <%isAdmin%> disabled>
-    </td>
-</tr>
-<%/users%>
-</script>
