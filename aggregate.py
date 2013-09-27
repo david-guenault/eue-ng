@@ -19,7 +19,7 @@ db = cn[database]
 print db
 co = db[collection]
 print co
-regex = re.compile("gmail", re.IGNORECASE)
+regex = re.compile(".*", re.IGNORECASE)
 
 result = co.find()
 
@@ -28,14 +28,16 @@ result = co.find()
                          {"firstname": ".*"}]}},
 """
 
-result = co.aggregate([{"$match": {"$or": [
-    {"email": regex},
-    {"firstname": regex}]}},
-    {"$project": {"_id": 0,
-                  "firstname": "$firstname",
-                  "lastname": "$lastname",
-                  "email": "$email",
-                  "isAdmin": "$isAdmin"}}])
+result = co.aggregate([{'$match': {'$or': [{'email': regex}, 
+										   {'firstname': regex}, 
+										   {'lastname': regex}, 
+										   {'email': regex}]}}, 
+						{'$project': {'firstname': '$firstname', 
+									  'lastname': '$lastname', 
+									  'isAdmin': '$isAdmin', 
+									  '_id': 0, 
+									  'email': '$email', 
+									  'select': {'$toLower':''}}}])
 
 print dumps(result)
 
