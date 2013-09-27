@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from lib import euehelpers
+import re
 
 
 class user:
@@ -208,22 +209,28 @@ class user:
         if not isinstance(where, list):
             return False
 
-        """ build search clause over where field list """
-        clause = []
-        for f in where:
-            clause.append({f: {"$regex": pattern}})
-
+        match = []
         project = {}
 
-        """ exclude some fields """
-        excluded = ["_id", "password"]
-        for e in project:
-            project[e] = 0
+        if pattern == "":
+            pattern = ".*"
+
+        """ build search clause over where field list """
+        regex = re.compile(pattern, re.IGNORECASE)
+        for f in where:
+            match.append({f: {"$regex": regex}})
+
+        match = {"$match": {"$or": match}}
+
+        """ exclude _id fields """
+        project["_id"] = 0
 
         """ project """
-        fields = ["firstname", "lastname", "email", "select"]
+        fields = ["firstname", "lastname", "email", "select", "isAdmin"]
         for e in fields:
             project[e] = "$%s" % (e)
+
+        project = {"$project": project}
 
         """
           db.users.aggregate(
@@ -237,15 +244,16 @@ class user:
                         }}).result;
         """
 
-        try:
-            print {"$project": project}
-            c = self.mongo.db[self.collection].aggregate(
-                {"$match": {"$or": clause}},
-                {"$project": project})
+        # try:
+        db = self.mongo.getDb(self.mongo.database)
+        col = db[self.collection]
 
-            return c["result"]
-        except:
-            return False
+        c = col.aggregate([project])
+        print len(c)
+
+        # return c
+        # except:
+        #     return False
         # print c.count()
         # if c.count() == 0:
         #     return []
