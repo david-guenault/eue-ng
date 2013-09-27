@@ -221,7 +221,7 @@ class TestUser(unittest.TestCase):
         """ test result count should be 2 records """
         assert result is not False
         assert not isinstance(result, bool)
-        assert result.count() == 2
+        assert len(result) == 2
 
         """ search for everything """
         pattern = ""
@@ -229,13 +229,13 @@ class TestUser(unittest.TestCase):
 
         assert result is not False
         assert not isinstance(result, bool)
-        assert result.count() == 3
+        assert len(result) == 3
 
         """ if no result should return empty list """
-        # pattern = "42"
-        # result = self.user.findregex(pattern, where)
-        # print result
-        # assert result is not False
+        pattern = "42"
+        result = self.user.findregex(pattern, where)
+
+        assert len(result) == 0
 
 if __name__ == '__main__':
     unittest.main()
