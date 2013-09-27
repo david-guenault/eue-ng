@@ -3,7 +3,7 @@
 
 from lib import euehelpers
 import re
-
+from bson.json_util import dumps
 
 class user:
 
@@ -218,7 +218,7 @@ class user:
         """ build search clause over where field list """
         regex = re.compile(pattern, re.IGNORECASE)
         for f in where:
-            match.append({f: {"$regex": regex}})
+            match.append({f: regex})
 
         match = {"$match": {"$or": match}}
 
@@ -226,41 +226,41 @@ class user:
         project["_id"] = 0
 
         """ project """
-        fields = ["firstname", "lastname", "email", "select", "isAdmin"]
+        fields = ["firstname", "lastname", "email", "isAdmin"]
         for e in fields:
             project[e] = "$%s" % (e)
 
+        """ discard identier from resultset """
+        project["_id"] = 0
+
+        """ add a select field """
+        project["select"] = {'$toLower':''}
+
         project = {"$project": project}
 
+        print project
+
         """
-          db.users.aggregate(
-            {$match: {$or:[{email: /gmail/},
-                           {firstname: /gmail/}]}},
-            {$project: {firstname:"$firstname",
-                        lastname:"$lastname",
-                        email:"$email",
-                        isAdmin:"$isAdmin",
-                        _id:0
-                        }}).result;
+        result = co.aggregate([{"$match": {"$or": [
+            {"email": regex},
+            {"firstname": regex}]}},
+            {"$project": {"_id": 0,
+                          "firstname": "$firstname",
+                          "lastname": "$lastname",
+                          "email": "$email",
+                          "isAdmin": "$isAdmin"}}])
         """
 
-        # try:
-        db = self.mongo.getDb(self.mongo.database)
-        col = db[self.collection]
+        try:
+            result = self.mongo.db[self.collection].aggregate([match, project])
+            print result
+        except:
+            return False
 
-        c = col.aggregate([project])
-        print len(c)
-
-        # return c
-        # except:
-        #     return False
-        # print c.count()
-        # if c.count() == 0:
-        #     return []
-        # else:
-        #     for row in c:
-        #         results.append(row)
-        #     return results
+        if len(result["result"]) == 0:
+            return []
+        else:
+            return result["result"]
 
 
 if __name__ == '__main__':
